@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>For My Love 💖</title>
+  <link rel="stylesheet" href="n.css">
+</head>
+<body>
+  <canvas id="confettiCanvas"></canvas>
+
+  <div class="background-portrait"></div>
+
+  <div class="container">
+    <h1 class="hidden-message">Mannu💖, you are the most beautiful part of my world 🌸💖 Every beat of my heart says I’m lucky to have you. You are my forever sunshine ❤️</h1>
+    <button id="tapButton">Tap Me 💌</button>
+    <div class="hearts-container"></div>
+    <div class="small-hearts"></div>
+  </div>
+
+  <audio id="bgMusic" src="https://drive.google.com/file/d/1oQc1S8e6-4d-xvwUG0LdKPIHddh-y9rV/view?usp=drive_link"></audio>
+
+  <script>
+    const button = document.getElementById('tapButton');
+    const message = document.querySelector('.hidden-message');
+    const heartsContainer = document.querySelector('.hearts-container');
+    const smallHearts = document.querySelector('.small-hearts');
+    const backgroundPortrait = document.querySelector('.background-portrait');
+    const bgMusic = document.getElementById('bgMusic');
+
+    button.addEventListener('click', () => {
+      button.style.display = 'none';
+      message.classList.add('show');
+      backgroundPortrait.classList.add('fade-in');
+      createFloatingHearts();
+      createSmallHearts();
+      startConfetti();
+      bgMusic.play();
+    });
+
+    function createFloatingHearts() {
+      for (let i = 0; i < 20; i++) {
+        const heart = document.createElement('div');
+        heart.classList.add('heart');
+        heart.style.left = Math.random() * 100 + 'vw';
+        heart.style.animationDuration = 2 + Math.random() * 3 + 's';
+        heart.style.backgroundColor = getRandomHeartColor();
+        heart.style.width = heart.style.height = 15 + Math.random() * 20 + 'px';
+        heartsContainer.appendChild(heart);
+        setTimeout(() => heart.remove(), 5000);
+      }
+    }
+
+    function createSmallHearts() {
+      for (let i = 0; i < 30; i++) {
+        const sHeart = document.createElement('div');
+        sHeart.classList.add('small-heart');
+        sHeart.style.left = Math.random() * 100 + 'vw';
+        sHeart.style.top = Math.random() * 100 + 'vh';
+        smallHearts.appendChild(sHeart);
+        setTimeout(() => sHeart.remove(), 4000);
+      }
+    }
+
+    function getRandomHeartColor() {
+      const colors = ['#ff6f91', '#ff99c8', '#fcf6bd', '#d0f4de', '#a9def9', '#f6c1c1'];
+      return colors[Math.floor(Math.random() * colors.length)];
+    }
+
+    // Confetti
+    const canvas = document.getElementById('confettiCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+
+    let confetti = [];
+
+    function startConfetti() {
+      confetti = [];
+      for (let i = 0; i < 80; i++) {
+        confetti.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height - canvas.height,
+          size: Math.random() * 6 + 2,
+          speed: Math.random() * 3 + 2,
+          color: getRandomHeartColor()
+        });
+      }
+      animateConfetti();
+    }
+
+    function animateConfetti() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      confetti.forEach(c => {
+        ctx.fillStyle = c.color;
+        ctx.fillRect(c.x, c.y, c.size, c.size);
+        c.y += c.speed;
+      });
+      confetti = confetti.filter(c => c.y < canvas.height + 10);
+      if (confetti.length) requestAnimationFrame(animateConfetti);
+    }
+  </script>
+</body>
+</html>
